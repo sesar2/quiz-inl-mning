@@ -1,4 +1,4 @@
-const questions = [
+export const questions = [
     {
         type: "multiple choice",
         question: "What is the capital of France?",
@@ -140,3 +140,4 @@ const questions = [
         ]
     }
 ];
+

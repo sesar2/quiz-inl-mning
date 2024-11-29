@@ -1,12 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <link rel="stylesheet" href="style.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Parkinsans:wght@300..800&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    
-</body>
+  </head>
+  <body>
+    <div class="site-wrapper">
+      <div class="quiz-window">
+        <div class="header-container">
+            <h1>My Quiz App</h1>
+            <div class="switch-container">
+                <img src="images/sun-2-svgrepo-com.svg" alt="">
+                <label class="switch">
+                    <input id="toggle-button" type="checkbox" checked>
+                    <span class="slider"></span> 
+                </label>
+                <img src="images/moon-svgrepo-com.svg" alt="">
+
+            </div>
+        </div>
+        <div class="question">Q: Vad heter jag?</div>
+        <div class="options">
+          <div class="option">Kalle</div>
+          <div class="option">Pelle</div>
+          <div class="option">Nisse</div>
+          <div class="option">Sesse</div>
+        </div>
+        <button>Next</button>
+      </div>
+    </div>
+    <script type="module" src="script.js"></script>
+  </body>
 </html>
