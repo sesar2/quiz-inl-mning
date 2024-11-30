@@ -25,7 +25,9 @@ const renderQuestion= () => {
     
     if(currentQuestion.type !== "checkboxes"){
         currentQuestion.options.forEach((answer) => {
+
             const option = document.createElement("div");
+
             option.innerHTML = answer.text;
             option.classList.add("option");
             
@@ -37,13 +39,32 @@ const renderQuestion= () => {
                 } else {
                     option.classList.add("incorrect");
                 }
-                
-                // Disable all options after one is selected
+                // Gör så att "Next"-knappen går att trycka på samt tar bort möjligheten att klicka på resterande alternativ
                 nextQuestion.classList.remove('inactive')
                 Array.from(options.children).forEach(opt => opt.style.pointerEvents = 'none');
             });
             
             options.appendChild(option);
+        });
+    }else{
+        let selectedCorrectAnswers = 0;
+        let totalCorrectAnswers = currentQuestion.options.filter(option => option.isCorrect).length;
+
+        currentQuestion.options.forEach(answer => {
+            const checkboxOption = document.createElement('div');
+            checkboxOption.classList.add('option')
+            checkboxOption.classList.add('checkbox-option')
+
+            const checkbox = document.createElement('input')
+            checkbox.type = "checkbox"
+            
+            const label = document.createElement('label')
+            label.htmlFor = 'checkbox'
+            label.innerHTML = answer.text
+
+            checkboxOption.appendChild(checkbox)
+            checkboxOption.appendChild(label)
+            options.appendChild(checkboxOption)
         });
     }
     }
@@ -55,9 +76,6 @@ const renderQuestion= () => {
         console.log(correctAnswers)
     }
     
-    const renderCheckboxQuestions = () => {
-
-    }
 
 
 
