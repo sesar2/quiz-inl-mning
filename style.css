@@ -130,3 +130,16 @@ img {
     height: 35px;
     
 }
+
+.correct {
+ background: rgb(25, 71, 25);
+}
+
+.incorrect {
+    background: rgb(71, 25, 25);
+   }
+
+.inactive {
+    pointer-events: none;
+    background-color: #8fcaf6;;
+}
