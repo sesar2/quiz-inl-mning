@@ -8,10 +8,14 @@ const options = document.getElementById("options");
 const nextQuestion = document.getElementById("nxt");
 const question = document.getElementById("question");
 
+const checkIfAnyChecked = () => {
+  const checkboxes = options.querySelectorAll('input[type="checkbox"]');
+  return Array.from(checkboxes).some((checkbox) => checkbox.checked);
+};
 
 // funktion för att renderar svarsalternativ
 const renderOptions = (currentQuestion) => {
-    currentQuestion.options.forEach((answer) => {
+  currentQuestion.options.forEach((answer) => {
     const option = document.createElement("div");
 
     option.innerHTML = answer.text;
@@ -36,24 +40,27 @@ const renderOptions = (currentQuestion) => {
   });
 };
 // funktion för att rendera svaralternativ med "checkboxes"
-const renderCheckboxOptions = (currentQuestion) => {  
-    currentQuestion.options.forEach((answer) => {
-      const checkboxOption = document.createElement("div");
-      checkboxOption.classList.add("option");
-      checkboxOption.classList.add("checkbox-option");
-  
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-  
-      const label = document.createElement("label");
-      label.htmlFor = "checkbox";
-      label.innerHTML = answer.text;
-  
-      checkboxOption.appendChild(checkbox);
-      checkboxOption.appendChild(label);
-      options.appendChild(checkboxOption);
-    });
-  };
+const renderCheckboxOptions = (currentQuestion) => {
+  nextQuestion.classList.remove("inactive");
+
+  currentQuestion.options.forEach((answer, index) => {
+    const checkboxOption = document.createElement("div");
+    checkboxOption.classList.add("option");
+    checkboxOption.classList.add("checkbox-option");
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.id = `option-${index}`;
+
+    const label = document.createElement("label");
+    label.htmlFor = "checkbox";
+    label.innerHTML = answer.text;
+
+    checkboxOption.appendChild(checkbox);
+    checkboxOption.appendChild(label);
+    options.appendChild(checkboxOption);
+  });
+};
 
 const renderQuestion = () => {
   options.innerHTML = "";
@@ -61,18 +68,40 @@ const renderQuestion = () => {
   const currentQuestion = questions[questionIndex];
   question.innerHTML = currentQuestion.question;
   nextQuestion.classList.add("inactive");
-// kollar om frågan har typen "checkboxes"
+  // kollar om frågan har typen "checkboxes"
   if (currentQuestion.type !== "checkboxes") {
     renderOptions(currentQuestion);
   } else {
     renderCheckboxOptions(currentQuestion);
   }
-
 };
 
 const handleClick = () => {
-  questionIndex++;
-  renderQuestion();
+  const currentQuestion = questions[questionIndex];
+    if (currentQuestion.type === "checkboxes") {
+      let selectedCorrect = 0;
+      let totalCorrect = currentQuestion.options.filter(
+        (opt) => opt.isCorrect
+      ).length;
+
+      currentQuestion.options.forEach((answer, index) => {
+        const checkbox = document.getElementById(`option-${index}`);
+        const isSelected = checkbox.checked;
+
+        if (isSelected && answer.isCorrect) {
+          selectedCorrect++;
+        }
+      });
+
+      if (selectedCorrect === totalCorrect) {
+        correctAnswers++;
+      }
+      questionIndex++;
+      renderQuestion();
+    } else {
+      questionIndex++;
+      renderQuestion();
+    }
   console.log(correctAnswers);
 };
 
