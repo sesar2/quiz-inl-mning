@@ -23,7 +23,7 @@ const toggleState = () => {
 
 // funktion för att renderar svarsalternativ
 const renderOptions = (currentQuestion) => {
-  currentQuestion.options.forEach((answer) => {
+  currentQuestion?.options.forEach((answer) => {
     const option = document.createElement("div");
 
     option.innerHTML = answer.text;
@@ -70,22 +70,21 @@ const renderCheckboxOptions = (currentQuestion) => {
     options.appendChild(checkboxOption);
   });
 
-  
+
   const checkboxes = options.querySelectorAll('input[type="checkbox"]');
   checkboxes.forEach(checkbox => {
   checkbox.addEventListener("change", toggleState);
   });
-  toggleState()
 };
 
 const renderQuestion = () => {
   options.innerHTML = "";
 
   const currentQuestion = questions[questionIndex];
-  question.innerHTML = currentQuestion.question;
+  question.innerHTML = currentQuestion?.question;
   nextQuestion.classList.add("inactive");
   // kollar om frågan har typen "checkboxes"
-  if (currentQuestion.type !== "checkboxes") {
+  if (currentQuestion?.type !== "checkboxes") {
     renderOptions(currentQuestion);
   } else {
     renderCheckboxOptions(currentQuestion);
@@ -93,9 +92,12 @@ const renderQuestion = () => {
 };
 
 const handleClick = () => {
-  const currentQuestion = questions[questionIndex];
+  console.log(questionIndex)
+  const currentQuestion = questions[questionIndex]
+
+
   // körs bara om type = checkboxes
-  if (currentQuestion.type === "checkboxes") {
+  if (currentQuestion?.type === "checkboxes") {
     //variabel för att hålla kolla på hur många "rätta" checkboxes som är checked
     let selectedCorrect = 0;
     // skapar en filtrerad array med bara de korrekta svaren
@@ -119,14 +121,32 @@ const handleClick = () => {
     questionIndex++;
     renderQuestion();
   }
-  console.log(correctAnswers);
+  
+  if (questionIndex === 15) {
+    renderResults()
+  } else {
+    renderQuestion();
+  }
 };
 
 nextQuestion.addEventListener("click", handleClick);
 
 const renderResults = () => {
-    
+    question.innerHTML = `Congratulations! You got ${correctAnswers} questions correct`
+
+    const result = document.querySelector('.result')
+
+    const score = document.createElement('h1')
+    score.classList.add('score')
   
+    result.appendChild(score)
+    score.innerHTML = `${correctAnswers} / ${questions.length}`
+    correctAnswers > 10 ? score.style.color = 'green' : correctAnswers <= 10 && correctAnswers > 5 ? score.style.color = 'orange' : score.style.color = 'red'
 }
 
-renderQuestion();
+const startQuiz = () => {
+  questionIndex = 0;
+  renderQuestion()
+}
+
+startQuiz();
