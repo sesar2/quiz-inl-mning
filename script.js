@@ -8,10 +8,18 @@ const options = document.getElementById("options");
 const nextQuestion = document.getElementById("nxt");
 const question = document.getElementById("question");
 
+// function som returnerar true eller false beroende på om någon checkbox är .checked
 const checkIfAnyChecked = () => {
   const checkboxes = options.querySelectorAll('input[type="checkbox"]');
-  return Array.from(checkboxes).some((checkbox) => checkbox.checked);
-};
+  // använder mig av .some metoden för att returnera true eller false beroende på om någon av checkboxes är .checked
+  return Array.from(checkboxes).some(checkbox => checkbox.checked);
+}
+
+// function för att kolla om checkIfAnyChecked returnerar true eller false
+const toggleState = () => {
+  const isAnyChecked = checkIfAnyChecked();
+  isAnyChecked ? nextQuestion.classList.remove('inactive') : nextQuestion.classList.add('inactive');
+}
 
 // funktion för att renderar svarsalternativ
 const renderOptions = (currentQuestion) => {
@@ -41,7 +49,8 @@ const renderOptions = (currentQuestion) => {
 };
 // funktion för att rendera svaralternativ med "checkboxes"
 const renderCheckboxOptions = (currentQuestion) => {
-  nextQuestion.classList.remove("inactive");
+    
+  options.innerHTML = "";
 
   currentQuestion.options.forEach((answer, index) => {
     const checkboxOption = document.createElement("div");
@@ -53,13 +62,20 @@ const renderCheckboxOptions = (currentQuestion) => {
     checkbox.id = `option-${index}`;
 
     const label = document.createElement("label");
-    label.htmlFor = "checkbox";
+    label.htmlFor = `option-${index}`;
     label.innerHTML = answer.text;
 
     checkboxOption.appendChild(checkbox);
     checkboxOption.appendChild(label);
     options.appendChild(checkboxOption);
   });
+
+  
+  const checkboxes = options.querySelectorAll('input[type="checkbox"]');
+  checkboxes.forEach(checkbox => {
+  checkbox.addEventListener("change", toggleState);
+  });
+  toggleState()
 };
 
 const renderQuestion = () => {
@@ -78,33 +94,39 @@ const renderQuestion = () => {
 
 const handleClick = () => {
   const currentQuestion = questions[questionIndex];
-    if (currentQuestion.type === "checkboxes") {
-      let selectedCorrect = 0;
-      let totalCorrect = currentQuestion.options.filter(
-        (opt) => opt.isCorrect
-      ).length;
+  // körs bara om type = checkboxes
+  if (currentQuestion.type === "checkboxes") {
+    //variabel för att hålla kolla på hur många "rätta" checkboxes som är checked
+    let selectedCorrect = 0;
+    // skapar en filtrerad array med bara de korrekta svaren
+    let totalCorrect = currentQuestion.options.filter((opt) => opt.isCorrect);
 
-      currentQuestion.options.forEach((answer, index) => {
-        const checkbox = document.getElementById(`option-${index}`);
-        const isSelected = checkbox.checked;
-
-        if (isSelected && answer.isCorrect) {
-          selectedCorrect++;
-        }
-      });
-
-      if (selectedCorrect === totalCorrect) {
-        correctAnswers++;
+    currentQuestion.options.forEach((answer, index) => {
+      const checkbox = document.getElementById(`option-${index}`);
+      const isSelected = checkbox.checked;
+      // ökar selectedCorrect med 1 om rätt svar är icheckat
+      if (isSelected && answer.isCorrect) {
+        selectedCorrect++;
       }
-      questionIndex++;
-      renderQuestion();
-    } else {
-      questionIndex++;
-      renderQuestion();
+    });
+    // om selectedCorrect och längden på totalCorrect är samma har användaren checkat i alla möjliga korrekta svar
+    if (selectedCorrect === totalCorrect.length) {
+      correctAnswers++;
     }
+    questionIndex++;
+    renderQuestion();
+  } else {
+    questionIndex++;
+    renderQuestion();
+  }
   console.log(correctAnswers);
 };
 
 nextQuestion.addEventListener("click", handleClick);
+
+const renderResults = () => {
+    
+  
+}
 
 renderQuestion();
