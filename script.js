@@ -34,6 +34,12 @@ const renderOptions = (currentQuestion) => {
 
     // Kollar om isCorrect är true eller false och lägger till en class beroende på vad som stämmer
     option.addEventListener("click", () => {
+      selectedAnswers[questionIndex] = {
+        question: currentQuestion.question,
+        selected: answer.text,
+        isCorrect: answer.isCorrect
+      }
+
       if (answer.isCorrect) {
         correctAnswers++;
         option.classList.add("correct");
@@ -55,6 +61,8 @@ const renderCheckboxOptions = (currentQuestion) => {
   options.innerHTML = "";
 
   currentQuestion.options.forEach((answer, index) => {
+    
+
     const checkboxOption = document.createElement("div");
     checkboxOption.classList.add("option");
     checkboxOption.classList.add("checkbox-option");
@@ -100,16 +108,30 @@ const handleClick = () => {
   if (currentQuestion?.type === "checkboxes") {
     //variabel för att hålla kolla på hur många "rätta" checkboxes som är checked
     let selectedCorrect = 0;
+    let answersChecked = []
+    let isCorrect = false
     // skapar en filtrerad array med bara de korrekta svaren
     let totalCorrect = currentQuestion.options.filter((opt) => opt.isCorrect);
 
     currentQuestion.options.forEach((answer, index) => {
       const checkbox = document.getElementById(`option-${index}`);
       const isSelected = checkbox.checked;
+      
+      if(checkbox.checked){
+        answersChecked.push(answer.text)
+      }
+
       // ökar selectedCorrect med 1 om rätt svar är icheckat
       if (isSelected && answer.isCorrect) {
         selectedCorrect++;
       }
+
+      selectedAnswers[questionIndex] = {
+        question: currentQuestion.question,
+        selected: answersChecked,
+        isCorrect: isCorrect,
+    };
+
     });
     // om selectedCorrect och längden på totalCorrect är samma har användaren checkat i alla möjliga korrekta svar
     if (selectedCorrect === totalCorrect.length) {
@@ -136,6 +158,7 @@ nextQuestion.addEventListener("click", handleClick);
 
 // function för att rendera resultaten
 const renderResults = () => {
+  console.log(selectedAnswers)
   result.style.display = "flex";
   question.innerHTML = `Congratulations! You got ${correctAnswers} questions correct`;
 
@@ -158,7 +181,7 @@ const renderResults = () => {
 const startQuiz = () => {
   nextQuestion.innerHTML = "Next";
   correctAnswers = 0;
-  questionIndex = 0;
+  questionIndex = 10;
   renderQuestion();
 };
 
