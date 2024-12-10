@@ -2,24 +2,27 @@ import { questions } from "/questions.js";
 
 let questionIndex = 0;
 let correctAnswers = 0;
+let selectedAnswers = []
 
-const container = document.getElementById("quiz-window");
 const options = document.getElementById("options");
 const nextQuestion = document.getElementById("nxt");
 const question = document.getElementById("question");
+const result = document.querySelector(".result");
 
 // function som returnerar true eller false beroende på om någon checkbox är .checked
 const checkIfAnyChecked = () => {
   const checkboxes = options.querySelectorAll('input[type="checkbox"]');
   // använder mig av .some metoden för att returnera true eller false beroende på om någon av checkboxes är .checked
-  return Array.from(checkboxes).some(checkbox => checkbox.checked);
-}
+  return Array.from(checkboxes).some((checkbox) => checkbox.checked);
+};
 
 // function för att kolla om checkIfAnyChecked returnerar true eller false
 const toggleState = () => {
   const isAnyChecked = checkIfAnyChecked();
-  isAnyChecked ? nextQuestion.classList.remove('inactive') : nextQuestion.classList.add('inactive');
-}
+  isAnyChecked
+    ? nextQuestion.classList.remove("inactive")
+    : nextQuestion.classList.add("inactive");
+};
 
 // funktion för att renderar svarsalternativ
 const renderOptions = (currentQuestion) => {
@@ -49,7 +52,6 @@ const renderOptions = (currentQuestion) => {
 };
 // funktion för att rendera svaralternativ med "checkboxes"
 const renderCheckboxOptions = (currentQuestion) => {
-    
   options.innerHTML = "";
 
   currentQuestion.options.forEach((answer, index) => {
@@ -70,10 +72,9 @@ const renderCheckboxOptions = (currentQuestion) => {
     options.appendChild(checkboxOption);
   });
 
-
   const checkboxes = options.querySelectorAll('input[type="checkbox"]');
-  checkboxes.forEach(checkbox => {
-  checkbox.addEventListener("change", toggleState);
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener("change", toggleState);
   });
 };
 
@@ -92,9 +93,8 @@ const renderQuestion = () => {
 };
 
 const handleClick = () => {
-  console.log(questionIndex)
-  const currentQuestion = questions[questionIndex]
-
+  console.log(questionIndex);
+  const currentQuestion = questions[questionIndex];
 
   // körs bara om type = checkboxes
   if (currentQuestion?.type === "checkboxes") {
@@ -121,32 +121,45 @@ const handleClick = () => {
     questionIndex++;
     renderQuestion();
   }
-  
+
   if (questionIndex === 15) {
-    renderResults()
+    renderResults();
   } else {
     renderQuestion();
+  }
+  if (questionIndex > 15) {
+    startQuiz();
   }
 };
 
 nextQuestion.addEventListener("click", handleClick);
 
+// function för att rendera resultaten
 const renderResults = () => {
-    question.innerHTML = `Congratulations! You got ${correctAnswers} questions correct`
+  result.style.display = "flex";
+  question.innerHTML = `Congratulations! You got ${correctAnswers} questions correct`;
 
-    const result = document.querySelector('.result')
+  const score = document.getElementById('score')
+  score.classList.add("score");
 
-    const score = document.createElement('h1')
-    score.classList.add('score')
-  
-    result.appendChild(score)
-    score.innerHTML = `${correctAnswers} / ${questions.length}`
-    correctAnswers > 10 ? score.style.color = 'green' : correctAnswers <= 10 && correctAnswers > 5 ? score.style.color = 'orange' : score.style.color = 'red'
-}
+  score.innerHTML = `${correctAnswers} / ${questions.length}`;
+  // använder ternary operator som if statement för att bestämma vilken färg resultat-texten har beroende på användarens score
+  correctAnswers > 10
+    ? (score.style.color = "green")
+    : correctAnswers <= 10 && correctAnswers > 5
+    ? (score.style.color = "orange")
+    : (score.style.color = "red");
 
+  nextQuestion.innerHTML = "Restart";
+  nextQuestion.classList.remove("inactive");
+  result.appendChild(score);
+};
+// function för att starta quizet, används även för att restarta då den "resetar" allt
 const startQuiz = () => {
+  nextQuestion.innerHTML = "Next";
+  correctAnswers = 0;
   questionIndex = 0;
-  renderQuestion()
-}
+  renderQuestion();
+};
 
 startQuiz();
