@@ -109,14 +109,14 @@ const handleClick = () => {
     //variabel för att hålla kolla på hur många "rätta" checkboxes som är checked
     let selectedCorrect = 0;
     let answersChecked = []
-    let isCorrect = false
+    let answerIsCorrect = false
     // skapar en filtrerad array med bara de korrekta svaren
     let totalCorrect = currentQuestion.options.filter((opt) => opt.isCorrect);
 
     currentQuestion.options.forEach((answer, index) => {
       const checkbox = document.getElementById(`option-${index}`);
       const isSelected = checkbox.checked;
-      
+
       if(checkbox.checked){
         answersChecked.push(answer.text)
       }
@@ -125,16 +125,19 @@ const handleClick = () => {
       if (isSelected && answer.isCorrect) {
         selectedCorrect++;
       }
+      if (selectedCorrect === totalCorrect.length) {
+        answerIsCorrect = true
+      }
 
       selectedAnswers[questionIndex] = {
         question: currentQuestion.question,
         selected: answersChecked,
-        isCorrect: isCorrect,
+        isCorrect: answerIsCorrect,
     };
 
     });
     // om selectedCorrect och längden på totalCorrect är samma har användaren checkat i alla möjliga korrekta svar
-    if (selectedCorrect === totalCorrect.length) {
+    if (answerIsCorrect) {
       correctAnswers++;
     }
     questionIndex++;
@@ -179,9 +182,11 @@ const renderResults = () => {
 };
 // function för att starta quizet, används även för att restarta då den "resetar" allt
 const startQuiz = () => {
+  selectedAnswers = []
+  result.style.display = 'none'
   nextQuestion.innerHTML = "Next";
   correctAnswers = 0;
-  questionIndex = 10;
+  questionIndex = 0;
   renderQuestion();
 };
 
