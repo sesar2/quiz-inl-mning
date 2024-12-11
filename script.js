@@ -236,24 +236,26 @@ const renderResults = () => {
   buttonctn.appendChild(showRestultBtn)
 };
 
+// function för att rendera resultatet från varje besvarad fråga
 const renderQuestionResults = () => {
+
+result.style.display = "none";
 
 const showRestultBtn = document.querySelector('.showRestultBtn')
 showRestultBtn.style.display = 'none'
 const questionsCtn = document.querySelector('.result-questions');
 questionsCtn.style.display = 'flex'
 
+// foreach loop som skapar element för varje fråga
 selectedAnswers.forEach(question => {
   
   const questionCtn = document.createElement('div');
   questionCtn.classList.add('question-container');
   questionsCtn.appendChild(questionCtn);
   
-  
   const questionResult = document.createElement('h2');
   questionResult.innerHTML = question.question; 
   questionCtn.appendChild(questionResult);
-  
   
   const yourAnswerCtn = document.createElement('div'); 
   yourAnswerCtn.classList.add('your-ans');
@@ -285,7 +287,7 @@ selectedAnswers.forEach(question => {
 });
 }
 
-
+// function för att sätta på lightmode
 const goLight = () => {
   const body = document.querySelector("body");
   const quiz = document.querySelector(".quiz-window");
@@ -299,7 +301,7 @@ const goLight = () => {
     option.classList.add("optionlight");
   });
 };
-
+// function för att sätta på darkmode
 const goDark = () => {
   const body = document.querySelector("body");
   const quiz = document.querySelector(".quiz-window");
@@ -314,7 +316,7 @@ const goDark = () => {
     option.classList.add("option");
   });
 };
-
+// function för att toggla mellan light och darkmode beroende på om en checkbox är checked
 const toggle = (event) => {
   if (event.target.checked) {
     darkMode = true;
@@ -326,5 +328,5 @@ const toggle = (event) => {
 };
 toggleButton.addEventListener("click", toggle);
 
-
+// körs i början för att starta quizet
 startQuiz();
