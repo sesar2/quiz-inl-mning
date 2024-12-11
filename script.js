@@ -18,16 +18,31 @@ const startQuiz = () => {
   selectedAnswers = [];
   result.style.display = "none";
   nextQuestion.innerHTML = "Next";
-
+  
   correctAnswers = 0;
-  questionIndex = 0;
+  questionIndex = 10;
   renderQuestion();
 };
 
+const renderQuestion = () => {
+  options.innerHTML = "";
+
+  const currentQuestion = questions[questionIndex];
+
+  question.innerHTML = currentQuestion?.question;
+  nextQuestion.classList.add("inactive");
+  // kollar om frågan har typen "checkboxes"
+  if (currentQuestion?.type !== "checkboxes") {
+    renderOptions(currentQuestion);
+  } else {
+    renderCheckboxOptions(currentQuestion);
+  }
+};
 
 // funktion för att renderar svarsalternativ
 const renderOptions = (currentQuestion) => {
   currentQuestion?.options.forEach((answer) => {
+   
     const option = document.createElement("div");
     
     option.innerHTML = answer.text;
@@ -36,10 +51,17 @@ const renderOptions = (currentQuestion) => {
     darkMode
     ? option.classList.add("option")
     : option.classList.add("optionlight");
+
+    if (answer.isCorrect) {
+        selectedAnswers[questionIndex] = {
+        correctAnswer: answer.text
+      };
+    } 
     
     // Kollar om isCorrect är true eller false och lägger till en class beroende på vad som stämmer
     option.addEventListener("click", () => {
       selectedAnswers[questionIndex] = {
+        ...selectedAnswers[questionIndex],
         question: currentQuestion.question,
         selected: answer.text,
         isCorrect: answer.isCorrect,
@@ -65,10 +87,17 @@ const renderOptions = (currentQuestion) => {
 // funktion för att rendera svaralternativ med "checkboxes"
 const renderCheckboxOptions = (currentQuestion) => {
   options.innerHTML = "";
+  let correctAnswersArr = []
   
   currentQuestion.options.forEach((answer, index) => {
     const checkboxOption = document.createElement("div");
-    
+
+    if (answer.isCorrect) {
+      correctAnswersArr.push(answer.text)
+    };
+    selectedAnswers[questionIndex] = {
+    correctAnswer: correctAnswersArr
+  }
     // ändrar class när klassen skapas beroende på om det är dark eller light mode
     darkMode
     ? checkboxOption.classList.add("option")
@@ -109,20 +138,6 @@ const toggleState = () => {
     : nextQuestion.classList.add("inactive");
 };
 
-const renderQuestion = () => {
-  options.innerHTML = "";
-
-  const currentQuestion = questions[questionIndex];
-
-  question.innerHTML = currentQuestion?.question;
-  nextQuestion.classList.add("inactive");
-  // kollar om frågan har typen "checkboxes"
-  if (currentQuestion?.type !== "checkboxes") {
-    renderOptions(currentQuestion);
-  } else {
-    renderCheckboxOptions(currentQuestion);
-  }
-};
 
 const handleCheckboxes = () => {
   const currentQuestion = questions[questionIndex];
@@ -151,6 +166,7 @@ const handleCheckboxes = () => {
     }
 
     selectedAnswers[questionIndex] = {
+      ...selectedAnswers[questionIndex],
       question: currentQuestion.question,
       selected: answersChecked,
       isCorrect: answerIsCorrect,
