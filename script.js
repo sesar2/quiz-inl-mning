@@ -254,7 +254,7 @@ selectedAnswers.forEach(question => {
   questionsCtn.appendChild(questionCtn);
   
   const questionResult = document.createElement('h2');
-  questionResult.innerHTML = question.question; 
+  questionResult.innerHTML = `Q: ${question.question}`; 
   questionCtn.appendChild(questionResult);
   
   const yourAnswerCtn = document.createElement('div'); 
