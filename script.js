@@ -2,22 +2,7 @@ import { questions } from "/questions.js";
 
 let questionIndex = 0;
 let correctAnswers = 0;
-let selectedAnswers = [
-
-{question: 'är en fågel?',
-  selected: ['bävling', 'grävling'],
-  isCorrect: true,
-  isCheckbox: true,
-  correctAnswer: ['Albatross', 'duva']
-},
-{question: 'är en gris?',
-  selected: 'ja',
-  isCorrect: false,
-  isCheckbox: false,
-  correctAnswer: 'nej'
-}
-
-];
+let selectedAnswers = [];
 let darkMode = true;
 
 const options = document.getElementById("options");
@@ -31,11 +16,15 @@ const toggleButton = document.querySelector("#toggle-button");
 // function för att starta quizet, används även för att restarta då den "resetar" allt
 const startQuiz = () => {
   selectedAnswers = [];
+
+  const questionsCtn = document.querySelector('.result-questions');
+  questionsCtn.style.display = 'none'
+
   result.style.display = "none";
   nextQuestion.innerHTML = "Next";
   
   correctAnswers = 0;
-  questionIndex = 10;
+  questionIndex = 0;
   renderQuestion();
 };
 
@@ -224,7 +213,9 @@ const renderResults = () => {
   console.log(selectedAnswers);
   const buttonctn = document.querySelector('.button-container')
   const showRestultBtn = document.createElement('button')
+  showRestultBtn.classList.add('showRestultBtn')
   showRestultBtn.innerHTML = 'Show Results'
+  showRestultBtn.addEventListener('click', renderQuestionResults)
   result.style.display = "flex";
   question.innerHTML = `Congratulations! You got ${correctAnswers} questions correct`;
 
@@ -247,8 +238,10 @@ const renderResults = () => {
 
 const renderQuestionResults = () => {
 
-
+const showRestultBtn = document.querySelector('.showRestultBtn')
+showRestultBtn.style.display = 'none'
 const questionsCtn = document.querySelector('.result-questions');
+questionsCtn.style.display = 'flex'
 
 selectedAnswers.forEach(question => {
   
@@ -266,6 +259,7 @@ selectedAnswers.forEach(question => {
   yourAnswerCtn.classList.add('your-ans');
   const yourAnswerText = document.createElement('h3');
   const yourAnswer = document.createElement('h3');
+  yourAnswer.style.color = question.isCorrect ? 'green' : 'red'
   
   yourAnswerText.innerHTML = 'You answered:';
   yourAnswer.innerHTML = question.isCheckbox ?  question.selected.join(',   ') : question.selected
@@ -279,6 +273,7 @@ selectedAnswers.forEach(question => {
   correctAnswerCtn.classList.add('corr-ans');
   const correctAnswerText = document.createElement('h3');
   const correctAnswer = document.createElement('h3');
+  correctAnswer.style.color = 'green'
 
   correctAnswerText.innerHTML = question.isCheckbox ? 'Correct Answers:' : 'Correct Answer:'
   correctAnswer.innerHTML = question.isCheckbox ?  question.correctAnswer.join(',   ') : question.correctAnswer
@@ -332,4 +327,4 @@ const toggle = (event) => {
 toggleButton.addEventListener("click", toggle);
 
 
-renderQuestionResults();
+startQuiz();

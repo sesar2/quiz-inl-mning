@@ -26,7 +26,8 @@ body {
     flex-direction: column;
     gap: 50px;
     border-radius: 40px;
-    background: 	#22303c
+    background: 	#22303c;
+    justify-content: space-between;
 }
 
 .options {
@@ -230,4 +231,12 @@ label {
 .next-prev-container {
     display: flex;
 
+}
+
+.your-ans {
+    color: #999999
+}
+
+.corr-ans {
+    color: #999999;
 }
