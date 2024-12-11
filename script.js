@@ -18,6 +18,9 @@ const startQuiz = () => {
   selectedAnswers = [];
 
   const questionsCtn = document.querySelector('.result-questions');
+  const showRestultBtn = document.querySelector('.show-results-btn')
+  showRestultBtn.style.display = 'none'
+
   questionsCtn.style.display = 'none'
 
   result.style.display = "none";
@@ -212,8 +215,8 @@ nextQuestion.addEventListener("click", handleClick);
 const renderResults = () => {
   console.log(selectedAnswers);
   const buttonctn = document.querySelector('.button-container')
-  const showRestultBtn = document.createElement('button')
-  showRestultBtn.classList.add('showRestultBtn')
+  const showRestultBtn = document.querySelector('.show-results-btn')
+  showRestultBtn.style.display = 'block'
   showRestultBtn.innerHTML = 'Show Results'
   showRestultBtn.addEventListener('click', renderQuestionResults)
   result.style.display = "flex";
@@ -241,7 +244,7 @@ const renderQuestionResults = () => {
 
 result.style.display = "none";
 
-const showRestultBtn = document.querySelector('.showRestultBtn')
+const showRestultBtn = document.querySelector('.show-results-btn')
 showRestultBtn.style.display = 'none'
 const questionsCtn = document.querySelector('.result-questions');
 questionsCtn.style.display = 'flex'
