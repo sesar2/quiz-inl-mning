@@ -2,12 +2,31 @@ import { questions } from "/questions.js";
 
 let questionIndex = 0;
 let correctAnswers = 0;
-let selectedAnswers = []
+let selectedAnswers = [];
+let darkMode = true;
 
 const options = document.getElementById("options");
 const nextQuestion = document.getElementById("nxt");
 const question = document.getElementById("question");
 const result = document.querySelector(".result");
+const toggleButton = document.querySelector("#toggle-button")
+
+
+
+const toggle = (event) =>{
+  if (event.target.checked) {
+    darkMode = true;
+    goDark()
+
+} else {
+    darkMode = false;
+    goLight()
+}
+
+}
+toggleButton.addEventListener('click', toggle);
+
+
 
 // function som returnerar true eller false beroende på om någon checkbox är .checked
 const checkIfAnyChecked = () => {
@@ -30,15 +49,19 @@ const renderOptions = (currentQuestion) => {
     const option = document.createElement("div");
 
     option.innerHTML = answer.text;
-    option.classList.add("option");
+    
+     // ändrar class när klassen skapas beroende på om det är dark eller light mode
+    darkMode ? option.classList.add("option") :  option.classList.add("optionlight");
+
 
     // Kollar om isCorrect är true eller false och lägger till en class beroende på vad som stämmer
     option.addEventListener("click", () => {
       selectedAnswers[questionIndex] = {
         question: currentQuestion.question,
         selected: answer.text,
-        isCorrect: answer.isCorrect
-      }
+        isCorrect: answer.isCorrect,
+        isCheckbox: false,
+      };
 
       if (answer.isCorrect) {
         correctAnswers++;
@@ -61,10 +84,10 @@ const renderCheckboxOptions = (currentQuestion) => {
   options.innerHTML = "";
 
   currentQuestion.options.forEach((answer, index) => {
-    
-
     const checkboxOption = document.createElement("div");
-    checkboxOption.classList.add("option");
+    
+    // ändrar class när klassen skapas beroende på om det är dark eller light mode
+    darkMode ? checkboxOption.classList.add("option") :  checkboxOption.classList.add("optionlight");
     checkboxOption.classList.add("checkbox-option");
 
     const checkbox = document.createElement("input");
@@ -90,6 +113,9 @@ const renderQuestion = () => {
   options.innerHTML = "";
 
   const currentQuestion = questions[questionIndex];
+
+
+
   question.innerHTML = currentQuestion?.question;
   nextQuestion.classList.add("inactive");
   // kollar om frågan har typen "checkboxes"
@@ -108,8 +134,8 @@ const handleClick = () => {
   if (currentQuestion?.type === "checkboxes") {
     //variabel för att hålla kolla på hur många "rätta" checkboxes som är checked
     let selectedCorrect = 0;
-    let answersChecked = []
-    let answerIsCorrect = false
+    let answersChecked = [];
+    let answerIsCorrect = false;
     // skapar en filtrerad array med bara de korrekta svaren
     let totalCorrect = currentQuestion.options.filter((opt) => opt.isCorrect);
 
@@ -117,8 +143,8 @@ const handleClick = () => {
       const checkbox = document.getElementById(`option-${index}`);
       const isSelected = checkbox.checked;
 
-      if(checkbox.checked){
-        answersChecked.push(answer.text)
+      if (checkbox.checked) {
+        answersChecked.push(answer.text);
       }
 
       // ökar selectedCorrect med 1 om rätt svar är icheckat
@@ -126,15 +152,15 @@ const handleClick = () => {
         selectedCorrect++;
       }
       if (selectedCorrect === totalCorrect.length) {
-        answerIsCorrect = true
+        answerIsCorrect = true;
       }
 
       selectedAnswers[questionIndex] = {
         question: currentQuestion.question,
         selected: answersChecked,
         isCorrect: answerIsCorrect,
-    };
-
+        isCheckbox: true,
+      };
     });
     // om selectedCorrect och längden på totalCorrect är samma har användaren checkat i alla möjliga korrekta svar
     if (answerIsCorrect) {
@@ -161,11 +187,11 @@ nextQuestion.addEventListener("click", handleClick);
 
 // function för att rendera resultaten
 const renderResults = () => {
-  console.log(selectedAnswers)
+  console.log(selectedAnswers);
   result.style.display = "flex";
   question.innerHTML = `Congratulations! You got ${correctAnswers} questions correct`;
 
-  const score = document.getElementById('score')
+  const score = document.getElementById("score");
   score.classList.add("score");
 
   score.innerHTML = `${correctAnswers} / ${questions.length}`;
@@ -182,12 +208,75 @@ const renderResults = () => {
 };
 // function för att starta quizet, används även för att restarta då den "resetar" allt
 const startQuiz = () => {
-  selectedAnswers = []
-  result.style.display = 'none'
+
+  selectedAnswers = [];
+  result.style.display = "none";
   nextQuestion.innerHTML = "Next";
+
   correctAnswers = 0;
   questionIndex = 0;
   renderQuestion();
 };
+
+
+const goLight = () => {
+  const body = document.querySelector("body");
+  const quiz = document.querySelector(".quiz-window");
+  const options = document.querySelectorAll(".option");
+  body.style.backgroundColor = "#bfd8ff";
+  body.style.color = "black";
+  quiz.style.backgroundColor = "white";
+
+  options.forEach((option) => {
+    option.classList.remove("option");
+    option.classList.add("optionlight");
+  });
+}
+
+const goDark = () => {
+  const body = document.querySelector("body");
+  const quiz = document.querySelector(".quiz-window");
+  const options = document.querySelectorAll(".optionlight");
+
+  body.style.backgroundColor = "#15202b";
+    body.style.color = "white";
+    quiz.style.backgroundColor = "#22303c";
+
+    options.forEach((option) => {
+      option.classList.remove("optionlight");
+      option.classList.add("option");
+    });
+}
+
+
+// const renderAnsweredQuestions = () => {
+//   renderResults()
+//   result.style.display = 'none'
+
+//   let selectedIndex = 0
+
+//   const wrapper = document.querySelector('.selected-wrapper')
+//   const question = document.querySelector('.question-result')
+
+//   question.innerHTML = selectedAnswers[selectedIndex].question
+
+// if(!selectedAnswers[selectedIndex].isCheckbox){
+
+//   const option = document.createElement("div");
+//   option.innerHTML = selectedAnswers[selectedIndex].selected
+//   option.classList.add("option-two");
+
+//   wrapper.appendChild(option)
+// }else {
+//   selectedAnswers[selectedIndex].selected.forEach(selectedAnswer => {
+//     const option = document.createElement("div");
+//     option.innerHTML = selectedAnswer
+//     option.classList.add("option-two");
+
+//     wrapper.appendChild(option)
+//   });
+// }
+
+// }
 
 startQuiz();

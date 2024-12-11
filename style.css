@@ -2,12 +2,12 @@
 * {
     margin: 0;
     padding: 0;
-    color: #dedddd;
     font-family: "Parkinsans", sans-serif;
 }
 
 body {
     background:	#15202b;
+    color: #dedddd;
 }
 
 .site-wrapper {
@@ -19,7 +19,6 @@ body {
 }
 
 .quiz-window {
-    
     width: 500px;
     padding: 100px 60px;
     display: flex;
@@ -39,12 +38,36 @@ body {
 .option {
     max-width: 100%;
     padding: 20px;
-    background: #22303c;
+    background: inherit;
     border: 1px solid #55acee;
     border-radius: 10px;
     font-size: 22px;
     cursor: pointer;
     transition: all 0.2s;
+}
+
+.optionlight {
+    max-width: 100%;
+    padding: 20px;
+    background: inherit;
+    border: 1px solid #279cf6;
+    border-radius: 10px;
+    font-size: 22px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.optionlight:hover {
+    background: #dddddd;
+}
+
+.option-two {
+    max-width: 100%;
+    padding: 20px;
+    background: #22303c;
+    border: 1px solid #55acee;
+    border-radius: 10px;
+    font-size: 22px;
 }
 .option:hover {
     background: #15202b;
@@ -133,10 +156,12 @@ img {
 
 .correct {
  background: rgb(25, 71, 25);
+ color: #fff;
 }
 
 .incorrect {
     background: rgb(71, 25, 25);
+    color: #fff;
    }
 
 .inactive {
@@ -176,4 +201,15 @@ label {
 }
 .score {
     margin-bottom: 60px;
+}
+
+.selected-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.next-prev-container {
+    display: flex;
+
 }

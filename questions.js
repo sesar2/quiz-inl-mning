@@ -79,7 +79,7 @@ export const questions = [
         options: [
             { text: "Python", isCorrect: true },
             { text: "Java", isCorrect: true },
-            { text: "HTML", isCorrect: true },
+            { text: "HTML", isCorrect: false },
             { text: "Excel", isCorrect: false }
         ]
     },
