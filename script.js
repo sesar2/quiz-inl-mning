@@ -2,7 +2,22 @@ import { questions } from "/questions.js";
 
 let questionIndex = 0;
 let correctAnswers = 0;
-let selectedAnswers = [];
+let selectedAnswers = [
+
+{question: 'är en fågel?',
+  selected: ['bävling', 'grävling'],
+  isCorrect: true,
+  isCheckbox: true,
+  correctAnswer: ['Albatross', 'duva']
+},
+{question: 'är en gris?',
+  selected: 'ja',
+  isCorrect: false,
+  isCheckbox: false,
+  correctAnswer: 'nej'
+}
+
+];
 let darkMode = true;
 
 const options = document.getElementById("options");
@@ -207,6 +222,9 @@ nextQuestion.addEventListener("click", handleClick);
 // function för att rendera resultaten
 const renderResults = () => {
   console.log(selectedAnswers);
+  const buttonctn = document.querySelector('.button-container')
+  const showRestultBtn = document.createElement('button')
+  showRestultBtn.innerHTML = 'Show Results'
   result.style.display = "flex";
   question.innerHTML = `Congratulations! You got ${correctAnswers} questions correct`;
 
@@ -224,7 +242,53 @@ const renderResults = () => {
   nextQuestion.innerHTML = "Restart";
   nextQuestion.classList.remove("inactive");
   result.appendChild(score);
+  buttonctn.appendChild(showRestultBtn)
 };
+
+const renderQuestionResults = () => {
+
+
+const questionsCtn = document.querySelector('.result-questions');
+
+selectedAnswers.forEach(question => {
+  
+  const questionCtn = document.createElement('div');
+  questionCtn.classList.add('question-container');
+  questionsCtn.appendChild(questionCtn);
+  
+  
+  const questionResult = document.createElement('h2');
+  questionResult.innerHTML = question.question; 
+  questionCtn.appendChild(questionResult);
+  
+  
+  const yourAnswerCtn = document.createElement('div'); 
+  yourAnswerCtn.classList.add('your-ans');
+  const yourAnswerText = document.createElement('h3');
+  const yourAnswer = document.createElement('h3');
+  
+  yourAnswerText.innerHTML = 'You answered:';
+  yourAnswer.innerHTML = question.isCheckbox ?  question.selected.join(',   ') : question.selected
+
+  yourAnswerCtn.appendChild(yourAnswerText);
+  yourAnswerCtn.appendChild(yourAnswer);
+  questionCtn.appendChild(yourAnswerCtn); 
+  
+  
+  const correctAnswerCtn = document.createElement('div'); 
+  correctAnswerCtn.classList.add('corr-ans');
+  const correctAnswerText = document.createElement('h3');
+  const correctAnswer = document.createElement('h3');
+
+  correctAnswerText.innerHTML = question.isCheckbox ? 'Correct Answers:' : 'Correct Answer:'
+  correctAnswer.innerHTML = question.isCheckbox ?  question.correctAnswer.join(',   ') : question.correctAnswer
+
+  correctAnswerCtn.appendChild(correctAnswerText);
+  correctAnswerCtn.appendChild(correctAnswer);
+  questionCtn.appendChild(correctAnswerCtn);
+  
+});
+}
 
 
 const goLight = () => {
@@ -267,34 +331,5 @@ const toggle = (event) => {
 };
 toggleButton.addEventListener("click", toggle);
 
-// const renderAnsweredQuestions = () => {
-//   renderResults()
-//   result.style.display = 'none'
 
-//   let selectedIndex = 0
-
-//   const wrapper = document.querySelector('.selected-wrapper')
-//   const question = document.querySelector('.question-result')
-
-//   question.innerHTML = selectedAnswers[selectedIndex].question
-
-// if(!selectedAnswers[selectedIndex].isCheckbox){
-
-//   const option = document.createElement("div");
-//   option.innerHTML = selectedAnswers[selectedIndex].selected
-//   option.classList.add("option-two");
-
-//   wrapper.appendChild(option)
-// }else {
-//   selectedAnswers[selectedIndex].selected.forEach(selectedAnswer => {
-//     const option = document.createElement("div");
-//     option.innerHTML = selectedAnswer
-//     option.classList.add("option-two");
-
-//     wrapper.appendChild(option)
-//   });
-// }
-
-// }
-
-startQuiz();
+renderQuestionResults();

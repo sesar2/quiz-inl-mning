@@ -22,6 +22,7 @@ body {
     width: 500px;
     padding: 100px 60px;
     display: flex;
+    min-height: 600px;
     flex-direction: column;
     gap: 50px;
     border-radius: 40px;
@@ -34,6 +35,20 @@ body {
     flex-direction: column;
     gap: 15px;
 }
+.question-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.result-questions {
+    max-height: 300px;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+}
 
 .option {
     max-width: 100%;
@@ -45,7 +60,10 @@ body {
     cursor: pointer;
     transition: all 0.2s;
 }
-
+.button-container {
+    display: flex;
+    gap: 30px;
+}
 .optionlight {
     max-width: 100%;
     padding: 20px;
